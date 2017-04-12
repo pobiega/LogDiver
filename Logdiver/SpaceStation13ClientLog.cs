@@ -10,9 +10,10 @@ namespace Logdiver
 {
     public class SpaceStation13ClientLog : IDisposable
     {
-        private bool hasBeenRead;
+        private bool _hasBeenRead;
 
         public static string DELIMITER = "\n";
+        public static TimeSpan BlockDuplicateTimeSpan = new TimeSpan(0,0,0,1);
 
         public string FileName { get; private set; }
 
@@ -25,6 +26,9 @@ namespace Logdiver
         private ISynchronizeInvoke synchronize;
 
         private LogFileMonitor monitor;
+
+        private string _lastLine;
+        private DateTime _lastLineTime; 
 
         private Dictionary<string, string> _replacementDictionary = new Dictionary<string, string>
         {
@@ -52,6 +56,7 @@ namespace Logdiver
             {"[F]","" },
             {"[B]","" },
             {"[R]","" },
+            {"(?) (PP) (VV) (SM) (JMP) (CA) (TAKE)","" },
             {"\r", "" }
         };
 
@@ -78,18 +83,33 @@ namespace Logdiver
             {
                 var line = ProcessString(lineEventArgs.Line);
 
-                line = $"[{DateTime.Now:HH:mm:ss}]" + line;
+                line = $"[{DateTime.Now:HH:mm:ss}] " + line;
 
                 Content += Environment.NewLine + line;
-                OnLine?.Invoke(this, new LineEventArgs(line.Trim()));
+                SendLine(line);
             }
-    }
+        }
+
+        private void SendLine(string line)
+        {
+            if (_lastLine != null)
+            {
+                if (_lastLine.Equals(line) && (DateTime.Now - _lastLineTime) > BlockDuplicateTimeSpan)
+                {
+                    return;
+                }
+            }
+
+            _lastLine = line;
+            _lastLineTime = DateTime.Now;
+            OnLine?.Invoke(this, new LineEventArgs(line.Trim()));
+        }
 
         public void InitialRead()
         {
-            if (hasBeenRead) return;
+            if (_hasBeenRead) return;
 
-            hasBeenRead = true;
+            _hasBeenRead = true;
 
             string read;
 
@@ -103,7 +123,7 @@ namespace Logdiver
 
             foreach (var line in Content.Split(new[] { DELIMITER }, StringSplitOptions.RemoveEmptyEntries))
             {
-                OnLine?.Invoke(this, new LineEventArgs(line.Trim()));
+                SendLine(line);
             }
 
             monitor = new LogFileMonitor(FileName, synchronize, DELIMITER);

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Logdiver"
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Logdiver" Height="350" Width="525">
     <Window.CommandBindings>
         <CommandBinding Command="New" CanExecute="NewCommand_CanExecute"  Executed="NewCommand_Executed"/>
         <CommandBinding Command="Open" CanExecute="OpenCommand_CanExecute" Executed="OpenCommand_Executed"/>

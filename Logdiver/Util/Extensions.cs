@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Logdiver
+namespace Logdiver.Util
 {
     internal static class Extensions
     {
