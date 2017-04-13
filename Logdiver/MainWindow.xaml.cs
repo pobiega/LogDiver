@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Logdiver.Filters;
 using Logdiver.Util;
 using Microsoft.Win32;
 using Xceed.Wpf.AvalonDock.Layout;
@@ -33,14 +34,15 @@ namespace Logdiver
 
             if (window.ShowDialog() != true) return;
 
+            var filters = window.Filters;
+
             var txtBox = new FilteredTextBox
             {
-                FilterType = FilterType.Contains,
-                Filter = window.Filter,
+                Filters = filters,
                 IsReadOnly = true,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-                Text = ss13?.GetMatchingContent(window.Filter)
+                Text = ss13?.GetMatchingContent(filters)
             };
 
             LineEventHandler += txtBox.OnLine;
@@ -48,7 +50,7 @@ namespace Logdiver
             var item = new LayoutAnchorable
             {
                 Content = txtBox,
-                Title = window.Filter,
+                Title = filters.ToString(),
                 CanAutoHide = false
             };
 

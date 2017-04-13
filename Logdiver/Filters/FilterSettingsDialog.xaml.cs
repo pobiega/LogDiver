@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using Logdiver.Filters;
 
 namespace Logdiver
 {
@@ -11,15 +12,20 @@ namespace Logdiver
         public FilterSettingsDialog()
         {
             InitializeComponent();
+
+            this.Filters = new FilterGroup();
+            this.PropertyGrid.SelectedObject = Filters;
         }
 
-        private void Window_ContentRendered(object sender, EventArgs e)
+        public FilterSettingsDialog(FilterGroup filters)
         {
-            txtFilter.SelectAll();
-            txtFilter.Focus();
+            InitializeComponent();
+
+            this.Filters = filters;
+            this.PropertyGrid.SelectedObject = Filters;
         }
 
-        public string Filter => txtFilter.Text;
+        public FilterGroup Filters;
 
         private void BtnDialogOk_OnClick(object sender, RoutedEventArgs e)
         {

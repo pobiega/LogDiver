@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Text;
+using Logdiver.Filters;
 using Logdiver.Util;
 
 namespace Logdiver
@@ -47,6 +48,7 @@ namespace Logdiver
             {"<span class='centradio'>", "CENTRADIO: "},
             {"<span class='radio'>", "RADIO: "},
             {"<span class='danger'>", "DANGER: "},
+            {"<span class='notice'><b><font color=red>", "AHELP:" },
             {"<span class='notice'>", "NOTICE: "},
             {"<span class='pm'>", "Admin PM:" },
             {"<span class='mod_channel'>", "MSAY:" },
@@ -143,12 +145,12 @@ namespace Logdiver
             return text;
         }
 
-        public string GetMatchingContent(string filter)
+        public string GetMatchingContent(FilterGroup filters)
         {
             var builder = new StringBuilder();
             foreach (var line in Content.Split(new[] { DELIMITER }, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.Contains(filter))
+                if (filters.Matches(line))
                 {
                     builder.AppendLine(line.Trim());
                 }
