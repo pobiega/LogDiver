@@ -8,9 +8,10 @@ to by Byond, using a file monitor.
 (I call them targets) to display log lines that match a string.contains filter.
 - Read log files, both closed and open (still being written to) and parse them.
 - Adds timestamps to lines read by the live logger.
+- Regex filters
+- Targets can have multiple filters of different kinds
 
 ## Planned features
-- Regex filters
-- Let targets contain multiple filters
+
 - Save targets configurations to disk. Load on startup.
 - Support loading of server-side log files and parse them accordingly.
